@@ -238,14 +238,14 @@
 
 #define CFG_HUSH_PARSER		1
 #define CFG_LONGHELP		1		/* undef to save memory		*/
-#define CFG_PROMPT		"VIP1970> "	/* Monitor Command Prompt	*/
+#define CFG_PROMPT		"VIP1970 # "	/* Monitor Command Prompt	*/
 #define CFG_PROMPT_HUSH_PS2	"> "
 #define CFG_CBSIZE		1024
 #define CFG_PBSIZE (CFG_CBSIZE+sizeof(CFG_PROMPT)+16) /* Print Buffer Size	*/
 #define CFG_MAXARGS		16		/* max number of command args	*/
 #define CFG_HZ			1000		/* HZ for timer ticks	*/
 #define CFG_LOAD_ADDR		CFG_SDRAM_BASE	/* default load address		*/
-#define CONFIG_BOOTDELAY	10		/* default delay before executing bootcmd */
+#define CONFIG_BOOTDELAY	2		/* Boot automatically after 2 seconds */
 #define CONFIG_ZERO_BOOTDELAY_CHECK
 
 #define CONFIG_CMDLINE_EDITING
