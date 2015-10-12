@@ -116,7 +116,7 @@ int board_init(void)
 
 int checkboard (void)
 {
-	printf ("\n\nBoard: STb7100-Reference (MB442)"
+	printf ("\n\nBoard: Motorola VIP1970"
 #ifdef CONFIG_SH_SE_MODE
 		"  [32-bit mode]"
 #else
