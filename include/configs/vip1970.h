@@ -245,7 +245,7 @@
 #define CFG_MAXARGS		16		/* max number of command args	*/
 #define CFG_HZ			1000		/* HZ for timer ticks	*/
 #define CFG_LOAD_ADDR		CFG_SDRAM_BASE	/* default load address		*/
-#define CONFIG_BOOTDELAY	2		/* Boot automatically after 2 seconds */
+#define CONFIG_BOOTDELAY	1		/* Boot automatically after 1 second */
 #define CONFIG_ZERO_BOOTDELAY_CHECK
 
 #define CONFIG_CMDLINE_EDITING
