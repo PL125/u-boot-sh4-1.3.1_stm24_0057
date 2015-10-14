@@ -252,16 +252,112 @@
 #define CONFIG_AUTO_COMPLETE       1
 
 /*-----------------------------------------------------------------------
+ * FLASH organization
+ */
+
+/* Choose if we want FLASH Support (NAND, NOR & SPI devices),
+ * all three, or none, or any other combination.
+ *
+ * Note: by default CONFIG_CMD_FLASH is defined in config_cmd_default.h
+ */
+#undef CONFIG_CMD_FLASH		/* undefine it, define only if needed */
+#define CONFIG_CMD_FLASH	/* define for NOR flash */
+#define CONFIG_CMD_NAND		/* define for NAND flash */
+#define CONFIG_SPI_FLASH	/* define for SPI serial flash */
+
+/*-----------------------------------------------------------------------
  * NOR FLASH organization
  */
 
-/* STb7100 reference board organised as 8 MiB flash with 128 KiB blocks */
-#define CFG_FLASH_CFI_DRIVER
-#define CFG_FLASH_CFI
-#define CFG_FLASH_PROTECTION	1	/* use hardware flash protection	*/
-#define CFG_MAX_FLASH_BANKS	1	/* max number of memory banks		*/
-#define CFG_MAX_FLASH_SECT	64	/* max number of sectors on one chip	*/
-#define CFG_FLASH_EMPTY_INFO		/* test if each sector is empty		*/
+/*
+ * Note: Only 14 address lines (A[14:1]) are wired up to the NOR flash, hence
+ * only a total of 16KiB of the NOR flash is (uniquely) addressable!
+ */
+#ifdef CONFIG_CMD_FLASH				/* NOR flash present ? */
+#	define CFG_FLASH_CFI_DRIVER
+#	define CFG_FLASH_CFI
+#	define CONFIG_FLASH_PROTECT_SINGLE_CELL
+#	define CFG_FLASH_PROTECTION	1	/* use hardware flash protection	*/
+#	define CFG_MAX_FLASH_BANKS	1	/* max number of memory banks		*/
+#	define CFG_MAX_FLASH_SECT	1024	/* max number of sectors on one chip	*/
+#	define CFG_FLASH_EMPTY_INFO		/* test if each sector is empty		*/
+#	define MTDPARTS_NOR						\
+	"physmap-flash:"	/* First NOR flash device */		\
+		"256k(U-Boot)"		/* first partition */		\
+		",128k(Environment)"					\
+		",4M(Kernel)"						\
+		",-(RestOfNor0)"	/* last partition */
+#	define MTDIDS_NOR						\
+	"nor0=physmap-flash"	/* First NOR flash device */
+#else
+#	undef CONFIG_CMD_IMLS			/* NOR-flash specific */
+#	define CFG_NO_FLASH			/* NOR-flash specific */
+#endif	/* CONFIG_CMD_FLASH */
+
+/*-----------------------------------------------------------------------
+ * NAND FLASH organization
+ */
+
+#ifdef CONFIG_CMD_NAND				/* NAND flash present ? */
+#	define CFG_MAX_NAND_DEVICE	1
+#	define NAND_MAX_CHIPS		CFG_MAX_NAND_DEVICE
+#	define CFG_NAND0_BASE		CFG_EMI_NAND_BASE
+#	define CFG_NAND_BASE_LIST	{ CFG_NAND0_BASE }
+#	define MTDPARTS_NAND						\
+	"gen_nand.1:"		/* First NAND flash device */		\
+		"128k(env-nand0)"	/* first partition */		\
+		",4M(kernel-nand0)"					\
+		",32M(root-nand0)"					\
+		",-(RestOfNand0)"	/* last partition */
+#	define MTDIDS_NAND						\
+	"nand0=gen_nand.1"	/* First NAND flash device */
+
+	/*
+	 * Currently, there are 2 main modes to read/write from/to
+	 * NAND devices on STM SoCs:
+	 *	a) "bit-banging" (can NOT be used in boot-from-NAND)
+	 *	b) FLEX-mode (only supported means for boot-from-NAND)
+	 * If CFG_NAND_FLEX_MODE is defined, then FLEX-mode will be
+	 * used, otherwise, "bit-banging" will be used.
+	 */
+	/* on this board, we *only* support bit-banging */
+#	undef CFG_NAND_FLEX_MODE	/* no FLEX, use bit-banging instead!  */
+
+	/*
+	 * If we want to store the U-boot environment variables in
+	 * the NAND device, then we also need to specify *where* the
+	 * environment variables will be stored. Typically this
+	 * would be immediately after the U-boot monitor itself.
+	 * However, that *may* be a bad block. Define the following
+	 * to place the environment in an appropriate good block.
+	 */
+#	define CFG_NAND_ENV_OFFSET (CFG_MONITOR_LEN + 0x0)	/* immediately after u-boot.bin */
+#endif	/* CONFIG_CMD_NAND */
+
+
+/*-----------------------------------------------------------------------
+ * SPI SERIAL FLASH organization
+ */
+
+/*
+ *	Name	Manuf	Device
+ *	-----	-----	------
+ *	UM6	ST	N25Q128
+ *	UM7	ST	N25Q256
+ */
+#if defined(CONFIG_SPI_FLASH)			/* SPI serial flash present ? */
+#	define CONFIG_SPI_FLASH_ST		/* ST N25Qxxx */
+#	define CONFIG_SPI			/* enable the SPI driver */
+#	define CONFIG_CMD_EEPROM		/* enable the "eeprom" command set */
+#	define CFG_I2C_FRAM			/* to minimize performance degradation */
+#	undef  CFG_EEPROM_PAGE_WRITE_DELAY_MS	/* to minimize performance degradation */
+
+	/* Use H/W FSM SPI Controller (not H/W SSC, nor S/W "bit-banging") */
+#	define CONFIG_STM_FSM_SPI		/* Use the H/W FSM for SPI */
+#	define CFG_STM_SPI_FSM_BASE	0xfe902000	/* FSM SPI Controller Base */
+#	define CFG_STM_SPI_CLOCKDIV	2	/* set SPI_CLOCKDIV = 2 */
+#	undef CONFIG_CMD_SPI			/* SPI serial bus command support - NOT with FSM! */
+#endif	/* CONFIG_SPI_FLASH */
 
 /*-----------------------------------------------------------------------
  * Addresss, size, & location of U-boot's Environment Sector
