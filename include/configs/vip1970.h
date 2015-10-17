@@ -138,26 +138,12 @@
  */
 
 /*
- * There are 2 options for ethernet:
- *    The on-board SMSC LAN91C111
- *    for STb7109, the on-chip STMAC & on-board PHY
+ * Use the internal ST MAC device + LAN8700 PHY
  */
-
-#if 1
-	/* Config for SMSC LAN91C111 (combined MAC+PHY) */
-#	define CONFIG_DRIVER_SMC91111
-#ifdef CONFIG_SH_SE_MODE
-#	define CONFIG_SMC91111_BASE	0xb2000300ul
-#else	/* CONFIG_SH_SE_MODE */
-#	define CONFIG_SMC91111_BASE	0xa2000300ul
-#endif	/* CONFIG_SH_SE_MODE */
-#else
-	/* Config for on-chip STMAC + STE10xP PHY */
 #	define CONFIG_DRIVER_NETSTMAC
-#	define CFG_STM_STMAC_BASE	0xb8110000ul
-#	define CONFIG_STMAC_STE10XP
+#	define CFG_STM_STMAC_BASE	0xb8110000ul	/* MAC = STM MAC */
+#	define CONFIG_STMAC_LAN8700			/* PHY = SMSC LAN8700 */
 #	define CONFIG_CMD_MII
-#endif
 
 
 /*  If this board does not have eeprom for ethernet address so allow the user
