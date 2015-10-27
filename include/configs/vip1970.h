@@ -101,11 +101,15 @@
 
 #include <config_cmd_default.h>
 
-#define CONFIG_CMD_ASKENV
-#define CONFIG_CMD_NFS
-#define CONFIG_CMD_PING
-#define CONFIG_CMD_DHCP
-#define CONFIG_CMD_IDE
+#define CONFIG_CMD_ASKENV		/* ask for env variable		*/
+#define CONFIG_CMD_NFS			/* NFS support			*/
+#define CONFIG_CMD_PING			/* ping support			*/
+#define CONFIG_CMD_DHCP			/* DHCP Support			*/
+#define CONFIG_CMD_IDE			/* IDE harddisk support		*/
+#define CONFIG_NETCONSOLE		/* include NetConsole support	*/
+#define CONFIG_NET_MULTI		/* needed for NetConsole	*/
+#define CONFIG_CMD_BDI			/* bdinfo ( Board Info )	*/
+#define CONFIG_CMD_NET			/* bootp, tftpboot, rarpboot	*/
 
 /*--------------------------------------------------------------
  * Serial console info
@@ -140,10 +144,10 @@
 /*
  * Use the internal ST MAC device + LAN8700 PHY
  */
-#	define CONFIG_DRIVER_NETSTMAC
-#	define CFG_STM_STMAC_BASE	0xb8110000ul	/* MAC = STM MAC */
-#	define CONFIG_STMAC_LAN8700			/* PHY = SMSC LAN8700 */
-#	define CONFIG_CMD_MII
+#define CONFIG_DRIVER_NETSTMAC
+#define CFG_STM_STMAC_BASE	0xb8110000ul	/* MAC = STM MAC */
+#define CONFIG_STMAC_LAN8700			/* PHY = SMSC LAN8700 */
+#define CONFIG_CMD_MII	/* MII support			*/
 
 
 /*  If this board does not have eeprom for ethernet address so allow the user
